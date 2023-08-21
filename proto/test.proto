@@ -5,15 +5,11 @@ option go_package= "./proto";
 
 service TestAPI {
   rpc Echo(ResponseRequest) returns (ResponseRequest) {}
-  rpc GetUser(UserRequest) returns (UserResponse) {}
+  rpc GetUser(UserResponse) returns (UserResponse) {}
 }
 
 message ResponseRequest {
     string message = 1;
-}
-
-message UserRequest {
-    string uuid = 1;
 }
 
 message UserResponse {

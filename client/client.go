@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "gRPC/demo/gen/proto"
+	pb "demo/gen/proto"
 
 	"log"
 
@@ -16,12 +16,16 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	client := pb.NewTestApiClient(conn)
+	client := pb.NewTestAPIClient(conn)
 
 	resp, err := client.Echo(context.Background(), &pb.ResponseRequest{Message: "Hello everyone!"})
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(resp)
-	fmt.Println(resp.Message)
+	respClient, err := client.GetUser(context.Background(), &pb.UserResponse{Name: "Rk", Age: 25})
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println("Echo :", resp.Message)
+	fmt.Println("Client :", respClient)
 }

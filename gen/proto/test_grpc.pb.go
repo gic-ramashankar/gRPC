@@ -28,7 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TestAPIClient interface {
 	Echo(ctx context.Context, in *ResponseRequest, opts ...grpc.CallOption) (*ResponseRequest, error)
-	GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	GetUser(ctx context.Context, in *UserResponse, opts ...grpc.CallOption) (*UserResponse, error)
 }
 
 type testAPIClient struct {
@@ -48,7 +48,7 @@ func (c *testAPIClient) Echo(ctx context.Context, in *ResponseRequest, opts ...g
 	return out, nil
 }
 
-func (c *testAPIClient) GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+func (c *testAPIClient) GetUser(ctx context.Context, in *UserResponse, opts ...grpc.CallOption) (*UserResponse, error) {
 	out := new(UserResponse)
 	err := c.cc.Invoke(ctx, TestAPI_GetUser_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -62,7 +62,7 @@ func (c *testAPIClient) GetUser(ctx context.Context, in *UserRequest, opts ...gr
 // for forward compatibility
 type TestAPIServer interface {
 	Echo(context.Context, *ResponseRequest) (*ResponseRequest, error)
-	GetUser(context.Context, *UserRequest) (*UserResponse, error)
+	GetUser(context.Context, *UserResponse) (*UserResponse, error)
 	mustEmbedUnimplementedTestAPIServer()
 }
 
@@ -73,7 +73,7 @@ type UnimplementedTestAPIServer struct {
 func (UnimplementedTestAPIServer) Echo(context.Context, *ResponseRequest) (*ResponseRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
 }
-func (UnimplementedTestAPIServer) GetUser(context.Context, *UserRequest) (*UserResponse, error) {
+func (UnimplementedTestAPIServer) GetUser(context.Context, *UserResponse) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedTestAPIServer) mustEmbedUnimplementedTestAPIServer() {}
@@ -108,7 +108,7 @@ func _TestAPI_Echo_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _TestAPI_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserRequest)
+	in := new(UserResponse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func _TestAPI_GetUser_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: TestAPI_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestAPIServer).GetUser(ctx, req.(*UserRequest))
+		return srv.(TestAPIServer).GetUser(ctx, req.(*UserResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }

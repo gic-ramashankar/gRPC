@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	pb "demo/gen/proto"
+	"fmt"
 	"net"
+	"strings"
 
 	"log"
 
@@ -14,10 +16,13 @@ type testAPIServer struct {
 	pb.UnimplementedTestAPIServer
 }
 
-func (s *testAPIServer) GetUser(ctx context.Context, req *pb.UserRequest) (*pb.UserResponse, error) {
-	return &pb.UserResponse{}, nil
+func (s *testAPIServer) GetUser(ctx context.Context, req *pb.UserResponse) (*pb.UserResponse, error) {
+	//fetch email based on name and age from db
+	req.Email = "rk@gridinfocom.com"
+	return req, nil
 }
 func (s *testAPIServer) Echo(ctx context.Context, req *pb.ResponseRequest) (*pb.ResponseRequest, error) {
+	req.Message = strings.Replace(req.Message, "!", ". Greetings from server side!", 1)
 	return req, nil
 }
 
@@ -26,6 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Println("Server Started")
 	grpcServer := grpc.NewServer()
 	pb.RegisterTestAPIServer(grpcServer, &testAPIServer{})
 
