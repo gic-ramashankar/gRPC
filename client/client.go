@@ -22,7 +22,7 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
-	respClient, err := client.GetUser(context.Background(), &pb.UserResponse{Name: "Rk", Age: 25})
+	respClient, err := client.GetUser(context.Background(), &pb.UserRequest{Email: "amit.mishra@gridinfocom.com"})
 	if err != nil {
 		log.Println(err)
 	}
